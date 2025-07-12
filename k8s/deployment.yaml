@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devtinder-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devtinder
+  template:
+    metadata:
+      labels:
+        app: devtinder
+    spec:
+      containers:
+        - name: devtinder
+          image: devtinder:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGO_URL
+              value: "mongodb+srv://mukeshshrikar11:cEdsRoeeKrGvpNrm@learnmongodb.lcllpab.mongodb.net/devTinder"
