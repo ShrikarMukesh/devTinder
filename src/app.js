@@ -43,12 +43,26 @@ app.get ("/users" , async (req, res) =>{
 })
 
 //update user endpoint
-app.patch("/user" , async (req, res) => {
-    const userId = req.body.userId; // Assuming the user ID is sent in the request body
+app.patch("/user/:userId" , async (req, res) => {
+
+    const userId = req.params?.userId; // Assuming the user ID is sent in the request body
     const updateData = req.body;
 
     try {
-        await User.findByIdAndUpdate({_id: userId}, updateData);
+        const ALLOWED_UPDATES = ["firstName", "about", "skills", "photoUrl", "lastName","userId"];
+        const isUpdateAllowed = Object.keys(updateData).every( key => ALLOWED_UPDATES.includes(key));
+
+        if (!isUpdateAllowed){
+            throw new Error("update not allowed");
+        }
+
+        if (updateData?.skills?.length > 5){
+            throw new Error("update not allowed");
+        }
+        await User.findByIdAndUpdate({_id: userId}, updateData,{
+            returnDocument: "after", // Return the updated document
+            runValidators: true // Ensure that the update respects the schema validation
+        });
         res.send("User updated successfully");
     } catch (error) {
         res.status(400).send("Error updating user" + error.message);

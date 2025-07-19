@@ -28,3 +28,6 @@ In `package.json`, the `^` (caret) and `~` (tilde) symbols specify how npm shoul
 npm install -g nodemon
 ```
 npm install mongoose
+
+## Validator package
+npm i validator
